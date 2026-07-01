@@ -108,6 +108,9 @@ api.route('/billing', billingRoutes)
 app.route('/api/v1', api)
 app.get('/health', (c) => c.json({ ok: true }))
 
+process.on('unhandledRejection', (reason) => console.error('Unhandled rejection:', reason))
+process.on('uncaughtException', (err) => console.error('Uncaught exception:', err))
+
 const port = parseInt(process.env.PORT ?? '3001')
 
 // CRITICAL boot order: bind the port FIRST so the platform health check detects
