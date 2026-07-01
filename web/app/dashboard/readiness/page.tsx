@@ -68,11 +68,17 @@ export default function ReadinessPage() {
     setError(null)
     try {
       const data = await api.getReadinessLedger()
+      const rawDist = data?.distribution
+      const distribution = Array.isArray(rawDist)
+        ? rawDist
+        : rawDist && typeof rawDist === 'object'
+          ? Object.entries(rawDist).map(([state, count]) => ({ state, count: Number(count) }))
+          : []
       setLedger({
         total_blocked_payees: data?.total_blocked_payees ?? 0,
         total_blocked_cents: data?.total_blocked_cents ?? 0,
         by_reason: Array.isArray(data?.by_reason) ? data.by_reason : [],
-        distribution: Array.isArray(data?.distribution) ? data.distribution : [],
+        distribution,
       })
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load readiness ledger')
