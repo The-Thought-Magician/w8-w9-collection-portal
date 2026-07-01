@@ -22,6 +22,8 @@ interface Metrics {
 
 interface LedgerReason {
   reason?: string
+  count?: number
+  blocked_cents?: number
   payees?: number
   cents?: number
   [k: string]: unknown
@@ -285,10 +287,10 @@ export default function DashboardPage() {
                 {ledger.by_reason.map((r, i) => (
                   <li key={i} className="flex items-center justify-between rounded-lg border border-slate-800 px-3 py-2">
                     <span className="flex items-center gap-2 text-sm text-slate-300">
-                      <Badge tone="red">{r.payees ?? 0}</Badge>
+                      <Badge tone="red">{r.count ?? r.payees ?? 0}</Badge>
                       {r.reason ?? 'Unspecified'}
                     </span>
-                    <span className="text-sm font-semibold tabular-nums text-red-300">{fmtUsd(r.cents)}</span>
+                    <span className="text-sm font-semibold tabular-nums text-red-300">{fmtUsd(r.blocked_cents ?? r.cents)}</span>
                   </li>
                 ))}
               </ul>
